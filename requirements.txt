@@ -1,0 +1,5 @@
+aiogram>=3.20
+aiosqlite>=0.20
+apscheduler>=3.11
+python-dotenv>=1.0
+openpyxl>=3.1

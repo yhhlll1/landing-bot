@@ -1,0 +1,15 @@
+[Unit]
+Description=Landing Bot 3
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/landingbot3
+EnvironmentFile=-/opt/landingbot3/.env
+ExecStart=/opt/landingbot3/venv/bin/python bot.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

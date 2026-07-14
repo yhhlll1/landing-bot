@@ -1,0 +1,33 @@
+# Секреты — НИКОГДА не коммитить боевые токены
+.env
+.env2
+.env3
+.env4
+.env.local
+.env.*.local
+
+# Базы данных
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# IDE / ОС
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Прочее
+*.bak
+*.log
