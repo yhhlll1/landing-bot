@@ -19,7 +19,7 @@ from aiogram.types import (
     Message,
 )
 
-from config import ADMIN_IDS, BOT_TOKEN, TIMEZONE
+from config import ADMIN_IDS, BOT_TOKEN, TIMEZONE, CALL_SERVICE_NAME
 from db import (
     add_to_blacklist,
     create_call,
@@ -189,7 +189,7 @@ async def _show_vacancy(message: Message, user_id: int) -> None:
             link = call.get("link", "")
             await message.answer(
                 f"⚡️ Прямо сейчас идёт созвон — можете подключиться прямо сейчас:\n"
-                f"<a href=\"{link}\">Войти в ProLine Connect</a>",
+                f"<a href=\"{link}\">Войти в {CALL_SERVICE_NAME}</a>",
                 parse_mode="HTML",
             )
 
@@ -238,6 +238,7 @@ async def handle_slot_choice(callback: CallbackQuery) -> None:
         call_dt=dt_str,
         link=call.get("link", ""),
         manager_contact=manager_contact,
+        service=CALL_SERVICE_NAME,
     )
     await callback.message.edit_text(text, reply_markup=rsvp_keyboard(call_id), parse_mode="HTML")
     await callback.answer()
@@ -255,7 +256,10 @@ async def handle_rsvp(callback: CallbackQuery) -> None:
     await callback.answer()
 
     if action == "confirmed":
-        await callback.message.answer(RSVP_CONFIRMED, reply_markup=confirmed_keyboard(call_id))
+        await callback.message.answer(
+            RSVP_CONFIRMED.format(service=CALL_SERVICE_NAME),
+            reply_markup=confirmed_keyboard(call_id),
+        )
     else:
         await callback.message.answer(RSVP_DECLINED)
         # Сразу показываем другие доступные слоты
@@ -439,7 +443,7 @@ async def admin_new_call_time(message: Message, state: FSMContext) -> None:
         return
     await state.update_data(call_dt=dt.isoformat())
     await state.set_state(AdminNewCall.waiting_link)
-    await message.answer("Введите ссылку на созвон (ProLine Connect / Jitsi):", reply_markup=cancel_keyboard())
+    await message.answer("Введите ссылку на созвон:", reply_markup=cancel_keyboard())
 
 
 @admin_router.message(AdminNewCall.waiting_link)

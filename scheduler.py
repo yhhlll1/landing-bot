@@ -7,7 +7,7 @@ from aiogram import Bot
 from aiogram.exceptions import TelegramRetryAfter, TelegramForbiddenError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import TIMEZONE
+from config import TIMEZONE, CALL_SERVICE_NAME
 from db import (
     get_all_scheduled_calls,
     get_confirmed_for_call,
@@ -70,7 +70,7 @@ async def _send_ping(bot: Bot, call_id: int, kind: str) -> None:
 
     if kind == "1h":
         from texts import PING_1H
-        text = PING_1H
+        text = PING_1H.format(service=CALL_SERVICE_NAME)
     elif kind == "15m":
         from texts import PING_15M
         link = call.get("link", "")
@@ -78,7 +78,7 @@ async def _send_ping(bot: Bot, call_id: int, kind: str) -> None:
     elif kind == "start":
         from texts import PING_START
         link = call.get("link", "")
-        text = PING_START.format(link=link)
+        text = PING_START.format(link=link, service=CALL_SERVICE_NAME)
     else:
         return
 
