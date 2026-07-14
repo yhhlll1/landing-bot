@@ -159,6 +159,16 @@ async def get_curators() -> list[dict]:
         return [{"contact": c, "active": True} for c in contacts]
 
 
+async def get_any_contact() -> str:
+    """Любой доступный контакт БЕЗ прокрутки round-robin счётчика:
+    первый активный куратор → запасной manager_contact. Пусто, если ничего нет."""
+    curators = await get_curators()
+    for c in curators:
+        if c.get("active", True) and c.get("contact"):
+            return c["contact"]
+    return await get_setting("manager_contact") or ""
+
+
 async def save_curators(curators: list[dict], reset_index: bool = False) -> None:
     """Сохраняет список кураторов. reset_index=True сбрасывает round-robin
     счётчик — нужно только при смене состава кураторов, но НЕ при toggle

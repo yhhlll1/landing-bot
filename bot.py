@@ -42,6 +42,7 @@ from db import (
     get_curators,
     get_next_manager_contact,
     get_user_curator,
+    get_any_contact,
     get_setting,
     save_curators,
     set_attendance_manager,
@@ -206,7 +207,17 @@ async def handle_slot_choice(callback: CallbackQuery) -> None:
     user_id = callback.from_user.id
 
     if raw == "none":
-        support_contact = await get_setting("support_contact") or "@huston000"
+        # Контакт для подбора времени: HR задаёт сам через админку,
+        # если не задан — берём ближайший доступный контакт из бота:
+        # закреплённый за кандидатом куратор → любой активный куратор → запасной менеджер.
+        support_contact = await get_setting("support_contact")
+        if not support_contact:
+            support_contact = await get_user_curator(user_id)
+        if not support_contact:
+            support_contact = await get_any_contact()
+        if not support_contact:
+            await callback.answer("Контакт пока не настроен. Попробуйте позже.", show_alert=True)
+            return
         await callback.message.edit_text(
             NO_SLOT_FIT.format(support_contact=support_contact),
             parse_mode="HTML",
