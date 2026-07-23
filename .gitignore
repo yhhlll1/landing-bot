@@ -1,10 +1,7 @@
 # Секреты — НИКОГДА не коммитить боевые токены
-.env
-.env2
-.env3
-.env4
-.env.local
-.env.*.local
+# Игнорируем все .env* кроме шаблона .env.example
+.env*
+!.env.example
 
 # Базы данных
 *.db

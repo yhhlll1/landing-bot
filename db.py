@@ -77,7 +77,7 @@ async def init_db() -> None:
         )
         # Контакт для варианта «ни одно время не подходит» (редактируется через /admin)
         await db.execute(
-            "INSERT OR IGNORE INTO settings(key, value) VALUES ('support_contact', '@huston000')"
+            "INSERT OR IGNORE INTO settings(key, value) VALUES ('support_contact', '')"
         )
         await db.commit()
 

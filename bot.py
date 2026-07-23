@@ -579,7 +579,7 @@ async def admin_manager_contact(message: Message, state: FSMContext) -> None:
 async def admin_support_start(callback: CallbackQuery, state: FSMContext) -> None:
     if not is_admin(callback.from_user.id):
         return
-    current = await get_setting("support_contact") or "@huston000"
+    current = await get_setting("support_contact") or "(не задан — берётся куратор или запасной менеджер)"
     await state.set_state(AdminSupport.waiting_contact)
     await callback.message.answer(
         f"Контакт для варианта «ни одно время не подходит»: {current}\n\n"
